@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="./css/style.css">
+
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+  <script type="text/javascript" src="https://unpkg.com/vis-util@1.1.8/dist/umd.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/vis-data@6.2.1/dist/umd.js"></script>
+  <script type="text/javascript" src="https://visjs.github.io/vis-network/peer/umd/vis-network.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://visjs.github.io/vis-network/styles/vis-network.min.css" />
+</head>
+<body>
+
+<!-- Modal -->
+<div class="modal fade" id="modalGramatica" tabindex="-1" role="dialog" aria-labelledby="modalGramaticaTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl" role="document">
+    <div class="modal-content line-top arbolito">
+      <div class="modal-header border-0">
+        <h5 class="modal-title text-muted" id="modalGramaticaTitle">Árbol</h5>
+      </div>
+      <div class="modal-body">
+          <div class="h-100" id="divArbol"></div>
+      </div>
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-link" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalError" tabindex="-1" role="dialog" aria-labelledby="modalGramaticaTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+    <div class="modal-content line-top-red">
+      <div class="modal-header border-0">
+        <h5 class="modal-title text-muted" id="modalGramaticaTitle">Error</h5>
+      </div>
+      <div class="modal-body">
+        <div class="invalid-feedback d-block">
+          El árbol no se puede mostrar debido a que la expresión no es aceptada en esta gramática.<br/>
+          Por favor ingrese una que si sea aceptada para poder ver el árbol.
+        </div>
+      </div>
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-link" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="py-4 text-center">
+    <h2>Analizador Sintáctico</h2>
+  </div>
+
+  <div class="row">
+    <!-- <div class="col-sm-6 col-md-5 col-lg-4 order-md-2 mb-4"> -->
+    <div class="col-sm-6 col-md-5 col-lg-4 mb-4">
+      <div class="row">
+        <div class="col-12">
+          <h4 class="d-flex justify-content-between mb-3">
+            <span class="text-muted">Tabla de Gramática</span>
+            <span class="badge badge-secondary badge-pill d-none" id="spanMaximo">3</span>
+            <!-- <button type="button" class="btn btn-sm btn-outline-primary btn-add" data-toggle="modal" data-target="#modalGramatica">+</button> -->
+          </h4>
+          <ul class="list-group mb-3">
+            <div class="table-responsive card tokens">
+              <table class="table table-sm table-hover m-0">
+                <thead>
+                  <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Gramática</th>
+                  </tr>
+                </thead>
+                <tbody id="tbodyTokens">
+                </tbody>
+              </table>
+            </div>
+          </ul>
+        </div>
+        <div class="col-12">
+          <h4 class="d-flex justify-content-between mb-3">
+            <span class="text-muted">Ingresa aquí tu expresión</span>
+          </h4>
+          <input type="text" class="form-control" id="txtExpresion" placeholder="Ej. 32+7*35+20">
+          <div class="valid-feedback invalid-feedback d-block" id="divOK">
+            Expresión no aceptada
+          </div>
+        </div>
+        <div class="col-12 mt-3">
+          <button type="button" class="btn btn-sm btn-outline-primary btn-block" id="btnMostrarArbol">Mostrar Árbol</button>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="col-sm-6 col-md-7 col-lg-8 order-md-1"> -->
+    <div class="col-sm-6 col-md-7 col-lg-8">
+      <h4 class="mb-3"><span class="text-muted">JSON</span></h4>
+      <form class="needs-validation" novalidate>
+        <div class="row mb-3">
+          <div class="col">
+            <div class="card tokens">
+              <textarea class="form-control" id="txtArbol" rows="20" disabled></textarea>
+            </div>
+          </div>
+        </div>
+
+        <hr class="mb-4">
+        <!-- <button class="btn btn-primary btn-block" type="button" onclick="countTokens()">Mostrar JSON</button> -->
+      </form>
+    </div>
+  </div>
+
+  <footer class="pt-2 text-muted text-center text-small">
+    <p class="mb-1">&copy; 2020 Carlos Daniel Marcucci Rivera</p>
+    <ul class="list-inline">
+      <li class="list-inline-item"><a href="#">Universidad Mariano Gálvez</a></li>
+      <!-- <li class="list-inline-item"><a href="#">Privacy</a></li>
+      <li class="list-inline-item"><a href="#">Terms</a></li>
+      <li class="list-inline-item"><a href="#">Support</a></li> -->
+    </ul>
+  </footer>
+</div>
+<script src="./js/scripts.js"></script>
+</body>
+</html>
